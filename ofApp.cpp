@@ -296,16 +296,17 @@ void ofApp::draw() {
             }
         }
         
-        if (view3D) {
-            cam.end();
-            ofDisableLighting();
-            ofDisableDepthTest();
-        }
-        
-        // Draw GUI if enabled
-        if (showGui) {
-            gui.draw();
-        }
+    }
+    
+    if (view3D) {
+        cam.end();
+        ofDisableLighting();
+        ofDisableDepthTest();
+    }
+    
+    // Draw GUI if enabled
+    if (showGui) {
+        gui.draw();
     }
 }
 
