@@ -254,8 +254,13 @@ void ofApp::draw() {
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
         if (view3D) {
+            // Create emissive material for the glowing path
+            ofMaterial material;
+            material.setEmissiveColor(ofColor(255, 50, 50));
+            material.setDiffuseColor(ofColor(255, 0, 0));
+            material.begin();
+            
             // Draw solution path slightly above floor
-            ofSetColor(255, 0, 0);
             ofSetLineWidth(cellSize/3);
             
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
@@ -270,6 +275,7 @@ void ofApp::draw() {
                 
                 ofDrawLine(x1, y1, cellSize/2, x2, y2, cellSize/2);
             }
+            material.end();
         } else {
             // Draw solution path background
             ofSetColor(255, 240, 240);  // Light red background
