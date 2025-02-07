@@ -54,6 +54,7 @@ private:
     // GUI
     ofxPanel gui;
     ofParameter<bool> showGui;
+    ofParameter<bool> animationEnabled;
     ofParameter<string> mazeInfo;
     ofParameter<int> cellSizeGui;
     ofParameterGroup sizeControls;

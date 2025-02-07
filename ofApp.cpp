@@ -16,7 +16,9 @@ void ofApp::setup() {
     
     // Maze Settings group
     sizeControls.setName("Maze Settings");
+    animationEnabled.set("Enable Animation", true);
     cellSizeGui.set("Cell Size", cellSize, 10, 50);
+    sizeControls.add(animationEnabled);
     sizeControls.add(cellSizeGui);
     generateButton.setup("Generate New Maze");
     solveButton.setup("Solve Maze");
@@ -72,21 +74,37 @@ void ofApp::setup() {
 void ofApp::onGeneratePressed() {
     if (!animatingGeneration) {
         resetMaze();
-        generateMaze();
-        solveMaze();
+        if (animationEnabled) {
+            animatingGeneration = true;
+            animatingSolution = false;
+            showSolution = false;
+            current_x = 2 * (static_cast<int>(ofRandom(mazeWidth))) + 1;
+            current_y = 2 * (static_cast<int>(ofRandom(mazeHeight))) + 1;
+            unvisited = mazeWidth * mazeHeight - 1;
+            maze[current_y][current_x] = 0;
+        } else {
+            generateMaze();
+            solveMaze();
+        }
     }
 }
 
 void ofApp::onSolvePressed() {
     if (!animatingGeneration) {
-        if (!animatingSolution) {
-            animatingSolution = true;
+        if (animationEnabled) {
+            if (!animatingSolution) {
+                animatingSolution = true;
+                showSolution = true;
+                solution.clear();
+                solveMaze();
+                currentSolutionIndex = 0;
+            } else {
+                animatingSolution = false;
+            }
+        } else {
             showSolution = true;
             solution.clear();
             solveMaze();
-            currentSolutionIndex = 0;
-        } else {
-            animatingSolution = false;
         }
     }
 }
