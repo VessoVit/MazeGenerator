@@ -252,6 +252,7 @@ void ofApp::keyPressed(int key) {
         }
     } else if (key == 's') {  // 's' toggles solution visibility
         showSolution = !showSolution;
+        animatingSolution = false;  // Stop any ongoing solution animation
     } else if (key == '+' || key == '=') {  // Increase cell size
         cellSizeGui = min(50, cellSize + 2);
         cellSize = cellSizeGui;
