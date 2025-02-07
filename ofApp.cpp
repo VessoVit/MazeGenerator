@@ -99,10 +99,6 @@ void ofApp::update() {
         }
     }
     
-    // Draw GUI if enabled
-    if (showGui) {
-        gui.draw();
-    }
 }
 
 //--------------------------------------------------------------
@@ -156,6 +152,11 @@ void ofApp::draw() {
             
             ofDrawLine(x1, y1, x2, y2);
         }
+    }
+    
+    // Draw GUI if enabled
+    if (showGui) {
+        gui.draw();
     }
 }
 
