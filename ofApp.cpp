@@ -31,10 +31,11 @@ void ofApp::setup() {
     pointLight.setPointLight();
     pointLight.setDiffuseColor(ofColor(255, 255, 255));
     pointLight.setSpecularColor(ofColor(255, 255, 255));
+    pointLight.setAttenuation(1.0, 0.001, 0.001);  // Improve point light falloff
     
     directionalLight.setDirectional();
-    directionalLight.setDiffuseColor(ofColor(200, 200, 200));
-    directionalLight.setSpecularColor(ofColor(255, 255, 255));
+    directionalLight.setDiffuseColor(ofColor(150, 150, 150));
+    directionalLight.setSpecularColor(ofColor(200, 200, 200));
     generateButton.setup("Generate New Maze");
     solveButton.setup("Show Solution");  // Changed text to be more clear
     gui.add(&generateButton);
@@ -182,7 +183,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    ofBackground(255);
+    ofBackground(0);  // Black background
     
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
@@ -217,7 +218,7 @@ void ofApp::draw() {
         
         // Draw maze
         // Draw floor
-        ofSetColor(200);
+        ofSetColor(50);  // Darker floor for better contrast
         ofDrawRectangle(0, 0, (2 * mazeWidth + 1) * cellSize, (2 * mazeHeight + 1) * cellSize);
         
         // Draw walls
@@ -256,8 +257,8 @@ void ofApp::draw() {
         if (view3D) {
             // Create emissive material for the glowing path
             ofMaterial material;
-            material.setEmissiveColor(ofColor(255, 50, 50));
-            material.setDiffuseColor(ofColor(255, 0, 0));
+            material.setEmissiveColor(ofColor(255, 140, 0));  // Golden orange glow
+            material.setDiffuseColor(ofColor(255, 165, 0));   // Orange base color
             material.begin();
             
             // Draw solution path slightly above floor
