@@ -14,10 +14,12 @@ void ofApp::setup() {
     showGui.set("Show GUI", true);
     mazeInfo.set("Maze Info", "");
     
-    // Size controls group
-    sizeControls.setName("Size Controls");
+    // Maze Settings group
+    sizeControls.setName("Maze Settings");
     cellSizeGui.set("Cell Size", cellSize, 10, 50);
     sizeControls.add(cellSizeGui);
+    sizeControls.add(generateButton.setup("Generate New Maze"));
+    sizeControls.add(solveButton.setup("Solve Maze"));
     
     // Algorithm selection group
     algorithmGroup.setName("Generation Algorithm");
@@ -31,8 +33,6 @@ void ofApp::setup() {
     // Add groups to GUI
     gui.add(sizeControls);
     gui.add(algorithmGroup);
-    gui.add(generateButton.setup("Generate New Maze"));
-    gui.add(solveButton.setup("Solve Maze"));
     
     generateButton.addListener(this, &ofApp::onGeneratePressed);
     solveButton.addListener(this, &ofApp::onSolvePressed);
@@ -227,10 +227,12 @@ void ofApp::keyPressed(int key) {
     } else if (key == 's') {  // 's' toggles solution visibility
         showSolution = !showSolution;
     } else if (key == '+' || key == '=') {  // Increase cell size
-        cellSize = min(50, cellSize + 2);
+        cellSizeGui = min(50, cellSize + 2);
+        cellSize = cellSizeGui;
         needsUpdate = true;
     } else if (key == '-' || key == '_') {  // Decrease cell size
-        cellSize = max(10, cellSize - 2);
+        cellSizeGui = max(10, cellSize - 2);
+        cellSize = cellSizeGui;
         needsUpdate = true;
     } else if (key == 'h') {  // Toggle GUI
         showGui = !showGui;
