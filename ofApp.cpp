@@ -20,8 +20,8 @@ void ofApp::setup() {
     sizeControls.add(cellSizeGui);
     generateButton.setup("Generate New Maze");
     solveButton.setup("Solve Maze");
-    sizeControls.add(generateButton);
-    sizeControls.add(solveButton);
+    gui.add(&generateButton);
+    gui.add(&solveButton);
     
     // Algorithm selection group
     algorithmGroup.setName("Generation Algorithm");
