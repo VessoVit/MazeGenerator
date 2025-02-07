@@ -59,6 +59,8 @@ private:
     ofParameter<string> mazeInfo;
     ofEasyCam cam;
     float wallHeight;
+    ofLight pointLight;
+    ofLight directionalLight;
     ofParameter<int> cellSizeGui;
     ofParameterGroup sizeControls;
     ofParameterGroup algorithmGroup;

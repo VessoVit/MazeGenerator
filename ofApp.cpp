@@ -26,6 +26,15 @@ void ofApp::setup() {
     // Initialize 3D properties
     wallHeight = cellSize * 2;
     cam.setDistance(500);
+    
+    // Setup lights
+    pointLight.setPointLight();
+    pointLight.setDiffuseColor(ofColor(255, 255, 255));
+    pointLight.setSpecularColor(ofColor(255, 255, 255));
+    
+    directionalLight.setDirectional();
+    directionalLight.setDiffuseColor(ofColor(200, 200, 200));
+    directionalLight.setSpecularColor(ofColor(255, 255, 255));
     generateButton.setup("Generate New Maze");
     solveButton.setup("Show Solution");  // Changed text to be more clear
     gui.add(&generateButton);
@@ -188,7 +197,16 @@ void ofApp::draw() {
     mazeInfo.set(info);
     
     if (view3D) {
+        ofEnableLighting();
+        ofEnableDepthTest();
+        
         cam.begin();
+        
+        // Position and enable lights
+        pointLight.setPosition(0, 0, 500);
+        pointLight.enable();
+        directionalLight.setPosition(200, 200, 200);
+        directionalLight.enable();
         
         // Center the maze
         ofTranslate(
@@ -280,6 +298,8 @@ void ofApp::draw() {
         
         if (view3D) {
             cam.end();
+            ofDisableLighting();
+            ofDisableDepthTest();
         }
         
         // Draw GUI if enabled
