@@ -18,8 +18,10 @@ void ofApp::setup() {
     sizeControls.setName("Maze Settings");
     cellSizeGui.set("Cell Size", cellSize, 10, 50);
     sizeControls.add(cellSizeGui);
-    sizeControls.add(generateButton.setup("Generate New Maze"));
-    sizeControls.add(solveButton.setup("Solve Maze"));
+    generateButton.setup("Generate New Maze");
+    solveButton.setup("Solve Maze");
+    sizeControls.add(generateButton);
+    sizeControls.add(solveButton);
     
     // Algorithm selection group
     algorithmGroup.setName("Generation Algorithm");
