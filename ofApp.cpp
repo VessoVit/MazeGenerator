@@ -6,7 +6,7 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
     cellSize = 20;  // Initial cell size
-    ofSetFrameRate(60);
+    ofSetFrameRate(120);
     showSolution = false;
     
     // Setup GUI
@@ -63,7 +63,7 @@ void ofApp::setup() {
     currentGenerationAlgorithm = GenerationAlgorithm::RECURSIVE_BACKTRACKER;
     
     // Set initial window size
-    ofSetWindowShape(600, 600);
+    ofSetWindowShape(1024, 768);
     
     // Initialize maze dimensions
     mazeWidth = 10;  // Start with fixed size for testing
@@ -186,7 +186,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    ofBackground(0);  // Black background
+    ofBackground(33);  // Black background
     
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
