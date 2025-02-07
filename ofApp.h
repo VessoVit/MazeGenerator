@@ -54,10 +54,13 @@ private:
     // GUI
     ofxPanel gui;
     ofParameter<bool> showGui;
-    ofParameter<string> currentAlgorithm;
     ofParameter<string> mazeInfo;
     ofParameter<int> cellSizeGui;
-    ofParameterGroup algorithms;
+    ofParameterGroup sizeControls;
+    ofParameterGroup algorithmGroup;
+    ofParameter<bool> algorithmRecursive;
+    ofParameter<bool> algorithmPrims;
+    ofParameter<bool> algorithmKruskals;
     ofxButton generateButton;
     ofxButton solveButton;
     

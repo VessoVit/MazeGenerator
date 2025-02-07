@@ -12,15 +12,25 @@ void ofApp::setup() {
     // Setup GUI
     gui.setup("Maze Controls");
     showGui.set("Show GUI", true);
-    currentAlgorithm.set("Algorithm", "Recursive Backtracker");
     mazeInfo.set("Maze Info", "");
+    
+    // Size controls group
+    sizeControls.setName("Size Controls");
     cellSizeGui.set("Cell Size", cellSize, 10, 50);
+    sizeControls.add(cellSizeGui);
     
-    algorithms.setName("Algorithms");
-    algorithms.add(currentAlgorithm);
-    algorithms.add(cellSizeGui);
+    // Algorithm selection group
+    algorithmGroup.setName("Generation Algorithm");
+    algorithmRecursive.set("Recursive Backtracker", true);
+    algorithmPrims.set("Prim's Algorithm", false);
+    algorithmKruskals.set("Kruskal's Algorithm", false);
+    algorithmGroup.add(algorithmRecursive);
+    algorithmGroup.add(algorithmPrims);
+    algorithmGroup.add(algorithmKruskals);
     
-    gui.add(algorithms);
+    // Add groups to GUI
+    gui.add(sizeControls);
+    gui.add(algorithmGroup);
     gui.add(generateButton.setup("Generate New Maze"));
     gui.add(solveButton.setup("Solve Maze"));
     
@@ -77,6 +87,21 @@ void ofApp::onSolvePressed() {
 void ofApp::update() {
     float currentTime = ofGetElapsedTimeMillis();
     
+    // Handle algorithm selection
+    if (algorithmRecursive && currentGenerationAlgorithm != GenerationAlgorithm::RECURSIVE_BACKTRACKER) {
+        algorithmPrims = false;
+        algorithmKruskals = false;
+        currentGenerationAlgorithm = GenerationAlgorithm::RECURSIVE_BACKTRACKER;
+    } else if (algorithmPrims && currentGenerationAlgorithm != GenerationAlgorithm::PRIMS) {
+        algorithmRecursive = false;
+        algorithmKruskals = false;
+        currentGenerationAlgorithm = GenerationAlgorithm::PRIMS;
+    } else if (algorithmKruskals && currentGenerationAlgorithm != GenerationAlgorithm::KRUSKALS) {
+        algorithmRecursive = false;
+        algorithmPrims = false;
+        currentGenerationAlgorithm = GenerationAlgorithm::KRUSKALS;
+    }
+    
     // Sync cell size with GUI
     if (cellSize != cellSizeGui) {
         cellSize = cellSizeGui;
@@ -108,7 +133,10 @@ void ofApp::draw() {
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
     info += "Cell Size: " + ofToString(cellSize) + "px\n";
-    info += "Generation Algorithm: " + currentAlgorithm.get() + "\n";
+    info += "Generation Algorithm: " + 
+            (algorithmRecursive ? "Recursive Backtracker" : 
+             algorithmPrims ? "Prim's Algorithm" : 
+             "Kruskal's Algorithm") + "\n";
     info += animatingGeneration ? "Generating..." : 
             (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
