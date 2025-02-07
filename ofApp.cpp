@@ -175,16 +175,6 @@ void ofApp::update() {
 void ofApp::draw() {
     ofBackground(255);
     
-    if (view3D) {
-        cam.begin();
-        
-        // Center the maze
-        ofTranslate(
-            -(2 * mazeWidth + 1) * cellSize / 2,
-            -(2 * mazeHeight + 1) * cellSize / 2,
-            0
-        );
-    
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
     info += "Cell Size: " + ofToString(cellSize) + "px\n";
@@ -196,6 +186,16 @@ void ofApp::draw() {
     info += animatingGeneration ? "Generating..." : 
             (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
+
+    if (view3D) {
+        cam.begin();
+        
+        // Center the maze
+        ofTranslate(
+            -(2 * mazeWidth + 1) * cellSize / 2,
+            -(2 * mazeHeight + 1) * cellSize / 2,
+            0
+        );
     
     // Draw maze
     if (view3D) {
