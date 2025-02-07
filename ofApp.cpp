@@ -30,15 +30,15 @@ void ofApp::setup() {
     // Setup lights for OF 0.12
     pointLight.setup();
     pointLight.enable();
-    pointLight.setDiffuseColor(ofColor(255, 255, 255));
+    pointLight.setDiffuseColor(ofColor(200, 200, 200));  // Softer diffuse light
     pointLight.setSpecularColor(ofColor(255, 255, 255));
-    pointLight.setAttenuation(1.0, 0.001, 0.001);
+    pointLight.setAttenuation(1.0, 0.002, 0.0);  // Adjusted attenuation for better falloff
     
     directionalLight.setup();
     directionalLight.enable();
     directionalLight.setDirectional();
-    directionalLight.setDiffuseColor(ofColor(150, 150, 150));
-    directionalLight.setSpecularColor(ofColor(200, 200, 200));
+    directionalLight.setDiffuseColor(ofColor(100, 100, 100));  // Dimmer ambient light
+    directionalLight.setSpecularColor(ofColor(150, 150, 150));  // Reduced specular
     generateButton.setup("Generate New Maze");
     solveButton.setup("Show Solution");  // Changed text to be more clear
     gui.add(&generateButton);
@@ -262,14 +262,16 @@ void ofApp::draw() {
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
         if (view3D) {
-            // Create emissive material for the glowing path
+            // Create glowing material for the solution path
             ofMaterial material;
-            material.setEmissiveColor(ofColor(255, 140, 0));  // Golden orange glow
-            material.setDiffuseColor(ofColor(255, 165, 0));   // Orange base color
+            material.setEmissiveColor(ofColor(255, 140, 0, 255));  // Strong golden orange emission
+            material.setDiffuseColor(ofColor(0));  // No diffuse color to enhance glow effect
+            material.setSpecularColor(ofColor(255, 200, 0));  // Golden specular highlight
+            material.setShininess(128);  // High shininess for glow effect
             material.begin();
             
-            // Draw solution path slightly above floor
-            ofSetLineWidth(cellSize/3);
+            // Draw solution path above floor with glow effect
+            ofSetLineWidth(cellSize/2);  // Thicker line for better glow
             
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
             for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
