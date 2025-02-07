@@ -117,7 +117,7 @@ void ofApp::update() {
         lastUpdateTime = currentTime;
     } else if (animatingSolution && !solution.empty()) {
         // Animate solution path
-        if (currentSolutionIndex < solution.size()) {
+        if (currentSolutionIndex < static_cast<int>(solution.size())) {
             currentSolutionIndex++;
         } else {
             animatingSolution = false;
