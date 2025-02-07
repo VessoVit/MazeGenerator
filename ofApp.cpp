@@ -289,9 +289,9 @@ void ofApp::draw() {
                 
                 // Draw cylinder
                 ofPushMatrix();
-                ofTranslate(x1, y1, cellSize/2);
+                ofTranslate((x1 + x2)/2, (y1 + y2)/2, cellSize/2);  // Move to midpoint
                 ofRotateZDeg(angle);
-                ofDrawCylinder(length/2, 0, 0, cellSize/6, length);
+                ofDrawCylinder(0, 0, 0, cellSize/6, length);  // Center the cylinder
                 ofPopMatrix();
             }
             material.end();
