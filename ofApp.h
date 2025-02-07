@@ -55,7 +55,10 @@ private:
     ofxPanel gui;
     ofParameter<bool> showGui;
     ofParameter<bool> animationEnabled;
+    ofParameter<bool> view3D;
     ofParameter<string> mazeInfo;
+    ofEasyCam cam;
+    float wallHeight;
     ofParameter<int> cellSizeGui;
     ofParameterGroup sizeControls;
     ofParameterGroup algorithmGroup;

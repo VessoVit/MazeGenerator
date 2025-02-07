@@ -17,9 +17,15 @@ void ofApp::setup() {
     // Maze Settings group
     sizeControls.setName("Maze Settings");
     animationEnabled.set("Enable Animation", true);
+    view3D.set("3D View", false);
     cellSizeGui.set("Cell Size", cellSize, 10, 50);
     sizeControls.add(animationEnabled);
+    sizeControls.add(view3D);
     sizeControls.add(cellSizeGui);
+    
+    // Initialize 3D properties
+    wallHeight = cellSize * 2;
+    cam.setDistance(500);
     generateButton.setup("Generate New Maze");
     solveButton.setup("Show Solution");  // Changed text to be more clear
     gui.add(&generateButton);
@@ -169,6 +175,16 @@ void ofApp::update() {
 void ofApp::draw() {
     ofBackground(255);
     
+    if (view3D) {
+        cam.begin();
+        
+        // Center the maze
+        ofTranslate(
+            -(2 * mazeWidth + 1) * cellSize / 2,
+            -(2 * mazeHeight + 1) * cellSize / 2,
+            0
+        );
+    
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
     info += "Cell Size: " + ofToString(cellSize) + "px\n";
@@ -182,10 +198,33 @@ void ofApp::draw() {
     mazeInfo.set(info);
     
     // Draw maze
-    for (int y = 0; y < 2 * mazeHeight + 1; y++) {
-        for (int x = 0; x < 2 * mazeWidth + 1; x++) {
-            if (maze[y][x] == 1) {
-                drawCell(x, y, ofColor(0));  // Wall
+    if (view3D) {
+        // Draw floor
+        ofSetColor(200);
+        ofDrawRectangle(0, 0, (2 * mazeWidth + 1) * cellSize, (2 * mazeHeight + 1) * cellSize);
+        
+        // Draw walls
+        ofSetColor(0);
+        for (int y = 0; y < 2 * mazeHeight + 1; y++) {
+            for (int x = 0; x < 2 * mazeWidth + 1; x++) {
+                if (maze[y][x] == 1) {
+                    ofDrawBox(
+                        x * cellSize + cellSize/2,
+                        y * cellSize + cellSize/2,
+                        wallHeight/2,
+                        cellSize,
+                        cellSize,
+                        wallHeight
+                    );
+                }
+            }
+        }
+    } else {
+        for (int y = 0; y < 2 * mazeHeight + 1; y++) {
+            for (int x = 0; x < 2 * mazeWidth + 1; x++) {
+                if (maze[y][x] == 1) {
+                    drawCell(x, y, ofColor(0));  // Wall
+                }
             }
         }
     }
@@ -197,6 +236,24 @@ void ofApp::draw() {
     
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
+        if (view3D) {
+            // Draw solution path slightly above floor
+            ofSetColor(255, 0, 0);
+            ofSetLineWidth(cellSize/3);
+            
+            int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
+            for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
+                const auto& current = solution[i];
+                const auto& next = solution[i + 1];
+                
+                float x1 = (current.first + 0.5) * cellSize;
+                float y1 = (current.second + 0.5) * cellSize;
+                float x2 = (next.first + 0.5) * cellSize;
+                float y2 = (next.second + 0.5) * cellSize;
+                
+                ofDrawLine(x1, y1, cellSize/2, x2, y2, cellSize/2);
+            }
+        } else {
         // Draw solution path background
         ofSetColor(255, 240, 240);  // Light red background
         int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
@@ -220,6 +277,10 @@ void ofApp::draw() {
             
             ofDrawLine(x1, y1, x2, y2);
         }
+    }
+    
+    if (view3D) {
+        cam.end();
     }
     
     // Draw GUI if enabled
