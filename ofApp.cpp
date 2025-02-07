@@ -221,7 +221,7 @@ void ofApp::draw() {
         ofDrawRectangle(0, 0, (2 * mazeWidth + 1) * cellSize, (2 * mazeHeight + 1) * cellSize);
         
         // Draw walls
-        ofSetColor(0);
+        ofSetColor(100, 100, 120);  // Light gray-blue color for better contrast
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
