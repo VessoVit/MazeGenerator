@@ -91,20 +91,17 @@ void ofApp::onGeneratePressed() {
 
 void ofApp::onSolvePressed() {
     if (!animatingGeneration) {
-        if (animationEnabled) {
-            if (!animatingSolution) {
-                animatingSolution = true;
-                showSolution = true;
-                solution.clear();
-                solveMaze();
-                currentSolutionIndex = 0;
-            } else {
-                animatingSolution = false;
-            }
-        } else {
+        if (animationEnabled && !showSolution) {
+            // Start animated solution
+            animatingSolution = true;
             showSolution = true;
             solution.clear();
             solveMaze();
+            currentSolutionIndex = 0;
+        } else {
+            // Toggle solution visibility
+            showSolution = !showSolution;
+            animatingSolution = false;
         }
     }
 }
