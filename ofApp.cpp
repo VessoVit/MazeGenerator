@@ -79,9 +79,15 @@ void ofApp::onGeneratePressed() {
 
 void ofApp::onSolvePressed() {
     if (!animatingGeneration) {
-        showSolution = true;
-        solution.clear();
-        solveMaze();
+        if (!animatingSolution) {
+            animatingSolution = true;
+            showSolution = true;
+            solution.clear();
+            solveMaze();
+            currentSolutionIndex = 0;
+        } else {
+            animatingSolution = false;
+        }
     }
 }
 
