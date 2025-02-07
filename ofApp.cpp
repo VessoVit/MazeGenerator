@@ -21,7 +21,7 @@ void ofApp::setup() {
     sizeControls.add(animationEnabled);
     sizeControls.add(cellSizeGui);
     generateButton.setup("Generate New Maze");
-    solveButton.setup("Solve Maze");
+    solveButton.setup("Show Solution");  // Changed text to be more clear
     gui.add(&generateButton);
     gui.add(&solveButton);
     
@@ -99,16 +99,24 @@ void ofApp::onGeneratePressed() {
 
 void ofApp::onSolvePressed() {
     if (!animatingGeneration) {
-        if (animationEnabled && !showSolution) {
-            // Start animated solution
-            animatingSolution = true;
-            showSolution = true;
-            solution.clear();
-            solveMaze();
-            currentSolutionIndex = 0;
+        // Always toggle solution visibility
+        showSolution = !showSolution;
+        
+        if (showSolution) {
+            // If showing solution and animation is enabled, start animation
+            if (animationEnabled) {
+                animatingSolution = true;
+                solution.clear();
+                solveMaze();
+                currentSolutionIndex = 0;
+            } else {
+                // Just show the full solution without animation
+                solution.clear();
+                solveMaze();
+                animatingSolution = false;
+            }
         } else {
-            // Toggle solution visibility
-            showSolution = !showSolution;
+            // When hiding solution, stop any ongoing animation
             animatingSolution = false;
         }
     }
