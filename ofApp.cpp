@@ -270,9 +270,7 @@ void ofApp::draw() {
             material.setShininess(128);  // High shininess for glow effect
             material.begin();
             
-            // Draw solution path above floor with glow effect
-            ofSetLineWidth(cellSize/2);  // Thicker line for better glow
-            
+            // Draw solution path as 3D cylinders
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
             for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
                 const auto& current = solution[i];
@@ -283,7 +281,18 @@ void ofApp::draw() {
                 float x2 = (next.first + 0.5) * cellSize;
                 float y2 = (next.second + 0.5) * cellSize;
                 
-                ofDrawLine(x1, y1, cellSize/2, x2, y2, cellSize/2);
+                // Calculate cylinder properties
+                float dx = x2 - x1;
+                float dy = y2 - y1;
+                float length = sqrt(dx*dx + dy*dy);
+                float angle = atan2(dy, dx) * RAD_TO_DEG;
+                
+                // Draw cylinder
+                ofPushMatrix();
+                ofTranslate(x1, y1, cellSize/2);
+                ofRotateZDeg(angle);
+                ofDrawCylinder(length/2, 0, 0, cellSize/6, length);
+                ofPopMatrix();
             }
             material.end();
         } else {
