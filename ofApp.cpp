@@ -179,23 +179,23 @@ void ofApp::draw() {
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
     info += "Cell Size: " + ofToString(cellSize) + "px\n";
     info += "Generation Algorithm: ";
-    info += (algorithmRecursive ? "Recursive Backtracker" : 
-             algorithmPrims ? "Prim's Algorithm" : 
+    info += (algorithmRecursive ? "Recursive Backtracker" :
+             algorithmPrims ? "Prim's Algorithm" :
              "Kruskal's Algorithm");
     info += "\n";
-    info += animatingGeneration ? "Generating..." : 
-            (animatingSolution ? "Solving..." : "Ready");
+    info += animatingGeneration ? "Generating..." :
+    (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
-
+    
     if (view3D) {
         cam.begin();
         
         // Center the maze
         ofTranslate(
-            -(2 * mazeWidth + 1) * cellSize / 2,
-            -(2 * mazeHeight + 1) * cellSize / 2,
-            0
-        );
+                    -(2 * mazeWidth + 1) * cellSize / 2,
+                    -(2 * mazeHeight + 1) * cellSize / 2,
+                    0
+                    );
         
         // Draw maze
         // Draw floor
@@ -208,13 +208,13 @@ void ofApp::draw() {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
                     ofDrawBox(
-                        x * cellSize + cellSize/2,
-                        y * cellSize + cellSize/2,
-                        wallHeight/2,
-                        cellSize,
-                        cellSize,
-                        wallHeight
-                    );
+                              x * cellSize + cellSize/2,
+                              y * cellSize + cellSize/2,
+                              wallHeight/2,
+                              cellSize,
+                              cellSize,
+                              wallHeight
+                              );
                 }
             }
         }
@@ -253,38 +253,39 @@ void ofApp::draw() {
                 ofDrawLine(x1, y1, cellSize/2, x2, y2, cellSize/2);
             }
         } else {
-        // Draw solution path background
-        ofSetColor(255, 240, 240);  // Light red background
-        int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
-        for (int i = 0; i < endIndex && i < solution.size(); i++) {
-            const auto& pos = solution[i];
-            drawCell(pos.first, pos.second, ofColor(255, 240, 240));
+            // Draw solution path background
+            ofSetColor(255, 240, 240);  // Light red background
+            int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
+            for (int i = 0; i < endIndex && i < solution.size(); i++) {
+                const auto& pos = solution[i];
+                drawCell(pos.first, pos.second, ofColor(255, 240, 240));
+            }
+            ofSetColor(255, 0, 0);  // Red path
+            ofSetLineWidth(cellSize/3);
+            
+            // Draw lines connecting solution points
+            int lineEndIndex = animatingSolution ? currentSolutionIndex : solution.size();
+            for (size_t i = 0; i < lineEndIndex - 1 && i < solution.size() - 1; i++) {
+                const auto& current = solution[i];
+                const auto& next = solution[i + 1];
+                
+                float x1 = (current.first + 0.5) * cellSize;
+                float y1 = (current.second + 0.5) * cellSize;
+                float x2 = (next.first + 0.5) * cellSize;
+                float y2 = (next.second + 0.5) * cellSize;
+                
+                ofDrawLine(x1, y1, x2, y2);
+            }
         }
-        ofSetColor(255, 0, 0);  // Red path
-        ofSetLineWidth(cellSize/3);
         
-        // Draw lines connecting solution points
-        int lineEndIndex = animatingSolution ? currentSolutionIndex : solution.size();
-        for (size_t i = 0; i < lineEndIndex - 1 && i < solution.size() - 1; i++) {
-            const auto& current = solution[i];
-            const auto& next = solution[i + 1];
-            
-            float x1 = (current.first + 0.5) * cellSize;
-            float y1 = (current.second + 0.5) * cellSize;
-            float x2 = (next.first + 0.5) * cellSize;
-            float y2 = (next.second + 0.5) * cellSize;
-            
-            ofDrawLine(x1, y1, x2, y2);
+        if (view3D) {
+            cam.end();
         }
-    }
-    
-    if (view3D) {
-        cam.end();
-    }
-    
-    // Draw GUI if enabled
-    if (showGui) {
-        gui.draw();
+        
+        // Draw GUI if enabled
+        if (showGui) {
+            gui.draw();
+        }
     }
 }
 
