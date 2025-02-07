@@ -196,9 +196,8 @@ void ofApp::draw() {
             -(2 * mazeHeight + 1) * cellSize / 2,
             0
         );
-    
-    // Draw maze
-    if (view3D) {
+        
+        // Draw maze
         // Draw floor
         ofSetColor(200);
         ofDrawRectangle(0, 0, (2 * mazeWidth + 1) * cellSize, (2 * mazeHeight + 1) * cellSize);
