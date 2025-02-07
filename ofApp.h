@@ -48,6 +48,8 @@ public:
 private:
     bool showSolution;
     void updateMazeDimensions();
+    void onGeneratePressed();
+    void onSolvePressed();
     
     // GUI
     ofxPanel gui;
