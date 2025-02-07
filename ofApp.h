@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp {
 public:
@@ -47,4 +48,22 @@ public:
 private:
     bool showSolution;
     void updateMazeDimensions();
+    
+    // GUI
+    ofxPanel gui;
+    ofParameter<bool> showGui;
+    ofParameter<string> currentAlgorithm;
+    ofParameter<string> mazeInfo;
+    ofParameter<int> cellSizeGui;
+    ofParameterGroup algorithms;
+    ofxButton generateButton;
+    ofxButton solveButton;
+    
+    // Algorithm types
+    enum class GenerationAlgorithm {
+        RECURSIVE_BACKTRACKER,
+        PRIMS,
+        KRUSKALS
+    };
+    GenerationAlgorithm currentGenerationAlgorithm;
 };

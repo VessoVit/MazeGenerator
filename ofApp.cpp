@@ -9,6 +9,26 @@ void ofApp::setup() {
     ofSetFrameRate(60);
     showSolution = false;
     
+    // Setup GUI
+    gui.setup("Maze Controls");
+    showGui.set("Show GUI", true);
+    currentAlgorithm.set("Algorithm", "Recursive Backtracker");
+    mazeInfo.set("Maze Info", "");
+    cellSizeGui.set("Cell Size", cellSize, 10, 50);
+    
+    algorithms.setName("Algorithms");
+    algorithms.add(currentAlgorithm);
+    algorithms.add(cellSizeGui);
+    
+    gui.add(algorithms);
+    gui.add(generateButton.setup("Generate New Maze"));
+    gui.add(solveButton.setup("Solve Maze"));
+    
+    generateButton.addListener(this, &ofApp::onGeneratePressed);
+    solveButton.addListener(this, &ofApp::onSolvePressed);
+    
+    currentGenerationAlgorithm = GenerationAlgorithm::RECURSIVE_BACKTRACKER;
+    
     // Set initial window size
     ofSetWindowShape(600, 600);
     
@@ -37,9 +57,34 @@ void ofApp::setup() {
     generateMaze();
 }
 
+void ofApp::onGeneratePressed() {
+    if (!animatingGeneration) {
+        resetMaze();
+        generateMaze();
+        solveMaze();
+    }
+}
+
+void ofApp::onSolvePressed() {
+    if (!animatingGeneration) {
+        showSolution = true;
+        solution.clear();
+        solveMaze();
+    }
+}
+
 //--------------------------------------------------------------
 void ofApp::update() {
     float currentTime = ofGetElapsedTimeMillis();
+    
+    // Sync cell size with GUI
+    if (cellSize != cellSizeGui) {
+        cellSize = cellSizeGui;
+        updateMazeDimensions();
+        resetMaze();
+        generateMaze();
+        solveMaze();
+    }
     
     if ((animatingGeneration || animatingSolution) && 
         (currentTime - lastUpdateTime > (animatingGeneration ? generationDelay : solutionDelay))) {
@@ -53,11 +98,24 @@ void ofApp::update() {
             animatingSolution = false;
         }
     }
+    
+    // Draw GUI if enabled
+    if (showGui) {
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
     ofBackground(255);
+    
+    // Update maze info
+    string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
+    info += "Cell Size: " + ofToString(cellSize) + "px\n";
+    info += "Generation Algorithm: " + currentAlgorithm.get() + "\n";
+    info += animatingGeneration ? "Generating..." : 
+            (animatingSolution ? "Solving..." : "Ready");
+    mazeInfo.set(info);
     
     // Draw maze
     for (int y = 0; y < 2 * mazeHeight + 1; y++) {
@@ -144,6 +202,8 @@ void ofApp::keyPressed(int key) {
     } else if (key == '-' || key == '_') {  // Decrease cell size
         cellSize = max(10, cellSize - 2);
         needsUpdate = true;
+    } else if (key == 'h') {  // Toggle GUI
+        showGui = !showGui;
     }
     
     if (needsUpdate) {
