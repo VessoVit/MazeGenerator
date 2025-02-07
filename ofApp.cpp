@@ -86,8 +86,8 @@ void ofApp::draw() {
         ofSetLineWidth(cellSize/3);
         
         // Draw lines connecting solution points
-        int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
-        for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
+        int lineEndIndex = animatingSolution ? currentSolutionIndex : solution.size();
+        for (size_t i = 0; i < lineEndIndex - 1 && i < solution.size() - 1; i++) {
             const auto& current = solution[i];
             const auto& next = solution[i + 1];
             
