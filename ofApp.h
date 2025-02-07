@@ -24,6 +24,7 @@ public:
     int generationDelay;
     int solutionDelay;
     float lastUpdateTime;
+    int currentSolutionIndex;
     
     // Generation animation state
     int current_x;

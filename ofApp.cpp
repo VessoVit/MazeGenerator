@@ -45,6 +45,13 @@ void ofApp::update() {
         (currentTime - lastUpdateTime > (animatingGeneration ? generationDelay : solutionDelay))) {
         updateAnimation();
         lastUpdateTime = currentTime;
+    } else if (animatingSolution && !solution.empty()) {
+        // Animate solution path
+        if (currentSolutionIndex < solution.size()) {
+            currentSolutionIndex++;
+        } else {
+            animatingSolution = false;
+        }
     }
 }
 
@@ -70,14 +77,17 @@ void ofApp::draw() {
     if (showSolution && !solution.empty()) {
         // Draw solution path background
         ofSetColor(255, 240, 240);  // Light red background
-        for (const auto& pos : solution) {
+        int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
+        for (int i = 0; i < endIndex && i < solution.size(); i++) {
+            const auto& pos = solution[i];
             drawCell(pos.first, pos.second, ofColor(255, 240, 240));
         }
         ofSetColor(255, 0, 0);  // Red path
         ofSetLineWidth(cellSize/3);
         
         // Draw lines connecting solution points
-        for (size_t i = 0; i < solution.size() - 1; i++) {
+        int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
+        for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
             const auto& current = solution[i];
             const auto& next = solution[i + 1];
             
@@ -96,24 +106,35 @@ void ofApp::keyPressed(int key) {
     bool needsUpdate = false;
     
     if (key == ' ') {  // Spacebar generates new maze instantly
+        animatingGeneration = false;  // Stop any ongoing animation
+        animatingSolution = false;
         resetMaze();
         generateMaze();
         solveMaze();
-    } else if (key == 'g') {  // 'g' starts animated generation
-        resetMaze();
-        animatingGeneration = true;
-        animatingSolution = false;
-        showSolution = false;
-        current_x = 2 * (static_cast<int>(ofRandom(mazeWidth))) + 1;
-        current_y = 2 * (static_cast<int>(ofRandom(mazeHeight))) + 1;
-        unvisited = mazeWidth * mazeHeight - 1;
-        maze[current_y][current_x] = 0;
-    } else if (key == 'f') {  // 'f' starts animated solution
+    } else if (key == 'g') {  // 'g' toggles animated generation
         if (!animatingGeneration) {
-            animatingSolution = true;
-            showSolution = true;
-            solution.clear();
-            solveMaze();
+            resetMaze();
+            animatingGeneration = true;
+            animatingSolution = false;
+            showSolution = false;
+            current_x = 2 * (static_cast<int>(ofRandom(mazeWidth))) + 1;
+            current_y = 2 * (static_cast<int>(ofRandom(mazeHeight))) + 1;
+            unvisited = mazeWidth * mazeHeight - 1;
+            maze[current_y][current_x] = 0;
+        } else {
+            animatingGeneration = false;
+        }
+    } else if (key == 'f') {  // 'f' toggles animated solution
+        if (!animatingGeneration) {
+            if (!animatingSolution) {
+                animatingSolution = true;
+                showSolution = true;
+                solution.clear();
+                solveMaze();
+                currentSolutionIndex = 0;
+            } else {
+                animatingSolution = false;
+            }
         }
     } else if (key == 's') {  // 's' toggles solution visibility
         showSolution = !showSolution;
