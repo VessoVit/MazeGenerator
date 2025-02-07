@@ -75,6 +75,7 @@ void ofApp::onGeneratePressed() {
     if (!animatingGeneration) {
         resetMaze();
         if (animationEnabled) {
+            // Start animated generation
             animatingGeneration = true;
             animatingSolution = false;
             showSolution = false;
@@ -83,9 +84,16 @@ void ofApp::onGeneratePressed() {
             unvisited = mazeWidth * mazeHeight - 1;
             maze[current_y][current_x] = 0;
         } else {
+            // Instant generation
+            animatingGeneration = false;
             generateMaze();
             solveMaze();
         }
+    } else if (animatingGeneration) {
+        // Stop animation if it's running
+        animatingGeneration = false;
+        generateMaze();
+        solveMaze();
     }
 }
 
@@ -222,18 +230,14 @@ void ofApp::keyPressed(int key) {
         resetMaze();
         generateMaze();
         solveMaze();
+        animationEnabled = false;  // Disable animation when using spacebar
     } else if (key == 'g') {  // 'g' toggles animated generation
-        if (!animatingGeneration) {
-            resetMaze();
-            animatingGeneration = true;
-            animatingSolution = false;
-            showSolution = false;
-            current_x = 2 * (static_cast<int>(ofRandom(mazeWidth))) + 1;
-            current_y = 2 * (static_cast<int>(ofRandom(mazeHeight))) + 1;
-            unvisited = mazeWidth * mazeHeight - 1;
-            maze[current_y][current_x] = 0;
-        } else {
+        animationEnabled = !animationEnabled;  // Toggle animation state
+        if (animatingGeneration) {
+            // Stop current animation if running
             animatingGeneration = false;
+            generateMaze();
+            solveMaze();
         }
     } else if (key == 'f') {  // 'f' toggles animated solution
         if (!animatingGeneration) {
