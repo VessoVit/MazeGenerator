@@ -27,12 +27,15 @@ void ofApp::setup() {
     wallHeight = cellSize * 2;
     cam.setDistance(500);
     
-    // Setup lights
-    pointLight.setPointLight();
+    // Setup lights for OF 0.12
+    pointLight.setup();
+    pointLight.enable();
     pointLight.setDiffuseColor(ofColor(255, 255, 255));
     pointLight.setSpecularColor(ofColor(255, 255, 255));
-    pointLight.setAttenuation(1.0, 0.001, 0.001);  // Improve point light falloff
+    pointLight.setAttenuation(1.0, 0.001, 0.001);
     
+    directionalLight.setup();
+    directionalLight.enable();
     directionalLight.setDirectional();
     directionalLight.setDiffuseColor(ofColor(150, 150, 150));
     directionalLight.setSpecularColor(ofColor(200, 200, 200));
@@ -198,16 +201,20 @@ void ofApp::draw() {
     mazeInfo.set(info);
     
     if (view3D) {
-        ofEnableLighting();
         ofEnableDepthTest();
+        ofEnableLighting();
         
+        // Set up camera for macOS retina displays
+        cam.enableOrtho();
         cam.begin();
         
-        // Position and enable lights
-        pointLight.setPosition(0, 0, 500);
-        pointLight.enable();
-        directionalLight.setPosition(200, 200, 200);
-        directionalLight.enable();
+        // Scale for retina displays
+        float scale = ofGetScreenWidth() / ofGetWidth();
+        ofScale(scale, scale, scale);
+        
+        // Update light positions for current frame
+        pointLight.setPosition(ofGetWidth()/2, ofGetHeight()/2, 500);
+        directionalLight.setPosition(ofGetWidth()/2 + 200, ofGetHeight()/2 + 200, 200);
         
         // Center the maze
         ofTranslate(
