@@ -133,10 +133,11 @@ void ofApp::draw() {
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
     info += "Cell Size: " + ofToString(cellSize) + "px\n";
-    info += "Generation Algorithm: " + 
-            (algorithmRecursive ? "Recursive Backtracker" : 
+    info += "Generation Algorithm: ";
+    info += (algorithmRecursive ? "Recursive Backtracker" : 
              algorithmPrims ? "Prim's Algorithm" : 
-             "Kruskal's Algorithm") + "\n";
+             "Kruskal's Algorithm");
+    info += "\n";
     info += animatingGeneration ? "Generating..." : 
             (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
