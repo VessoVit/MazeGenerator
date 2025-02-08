@@ -33,7 +33,7 @@ An interactive maze generator and solver built with OpenFrameworks. Create, visu
 2. Clone this repository into your OpenFrameworks apps folder:
    ```bash
    cd openFrameworks/apps/myApps
-   git clone https://github.com/yourusername/MazeGenerator.git
+   git clone https://github.com/vessovit/MazeGenerator.git
    ```
 3. Use the OpenFrameworks Project Generator to create the project files
 4. Add the required addon: ofxGui
@@ -73,7 +73,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Authors
 
-- Your Name - Initial work
+- Vesso Vit - Initial work
 
 ## Acknowledgments
 
