@@ -26,8 +26,10 @@ void ofApp::setup() {
     sizeControls.add(cellSizeGui);
     
     // Initialize 3D properties
-    wallHeight = cellSize * 2;
+    wallHeight = cellSize * 4;  // Double the wall height
     cam.setDistance(500);
+    cam.setNearClip(0.1);      // Allow very close zoom
+    cam.setFarClip(10000);     // Maintain far viewing distance
     
     // Setup lights for OF 0.12
     pointLight.setup();
