@@ -28,7 +28,7 @@ void ofApp::setup() {
     // Initialize 3D properties
     wallHeight = cellSize * 2;  // Reduced wall height
     cam.setDistance(500);
-    cam.setNearClip(0.001);    // Allow even closer zoom
+    cam.setNearClip(0.01);    // Allow even closer zoom
     cam.setFarClip(10000);     // Maintain far viewing distance
     cam.setTarget(ofVec3f(0, 0, 0)); // Set camera target to center
     
