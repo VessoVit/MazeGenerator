@@ -8,6 +8,8 @@ void ofApp::setup() {
     cellSize = 20;  // Initial cell size
     ofSetFrameRate(120);
     showSolution = false;
+//    ofSetCurrentRenderer(std::shared_ptr<ofBaseRenderer> renderer);
+    
     
     // Setup GUI
     gui.setup("Maze Controls");
@@ -74,7 +76,6 @@ void ofApp::setup() {
     for (auto& row : maze) {
         row.resize(2 * mazeWidth + 1, 1);
     }
-    
     // Initialize animation properties
     animatingGeneration = false;
     animatingSolution = false;
@@ -265,7 +266,7 @@ void ofApp::draw() {
             // Create glowing material for the solution path
             ofMaterial material;
             material.setEmissiveColor(ofColor(255, 140, 0, 255));  // Strong golden orange emission
-            material.setDiffuseColor(ofColor(0));  // No diffuse color to enhance glow effect
+            material.setDiffuseColor(ofColor(255));  // No diffuse color to enhance glow effect
             material.setSpecularColor(ofColor(255, 200, 0));  // Golden specular highlight
             material.setShininess(128);  // High shininess for glow effect
             material.begin();
