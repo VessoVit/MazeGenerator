@@ -1,5 +1,9 @@
 #version 150
 
+#ifdef GL_ES
+precision mediump float;
+#endif
+
 uniform vec3 glowColor;
 uniform float glowIntensity;
 uniform float time;

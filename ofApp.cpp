@@ -5,9 +5,17 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    // Load shaders
-    glowShader.load("shaders/glow");
+    // Load and setup shaders with explicit version
+    if (!glowShader.load("shaders/glow")) {
+        ofLogError("ofApp") << "Failed to load shaders";
+    }
     shaderTime = 0;
+    
+    // Setup GL state
+    ofEnableAlphaBlending();
+    ofEnableDepthTest();
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    glEnable(GL_POINT_SPRITE);
     cellSize = 20;  // Initial cell size
     ofSetFrameRate(120);
     showSolution = false;
@@ -213,8 +221,12 @@ void ofApp::draw() {
     mazeInfo.set(info);
     
     if (view3D) {
-        ofEnableDepthTest();
+        // Enable proper depth testing and lighting for Mac
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
         ofEnableLighting();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
         
         // Set up camera for better 3D viewing
         cam.disableOrtho();  // Use perspective for better 3D view
