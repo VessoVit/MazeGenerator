@@ -251,8 +251,8 @@ void ofApp::draw() {
                               x * cellSize + cellSize/2,
                               y * cellSize + cellSize/2,
                               wallHeight/2,
-                              cellSize,    // Slightly thinner walls
-                              cellSize,    // Slightly thinner walls
+                              cellSize*1.01,
+                              cellSize*1.01,
                               wallHeight
                               );
                 }
