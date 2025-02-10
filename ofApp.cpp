@@ -211,6 +211,7 @@ void ofApp::draw() {
         cam.enableOrtho();
         cam.begin();
         
+        
         // Scale for retina displays
         float scale = ofGetScreenWidth() / ofGetWidth();
         ofScale(scale, scale, scale);
@@ -279,7 +280,7 @@ void ofApp::draw() {
                 ofMesh tubeMesh;
                 tubeMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
                 const int segments = 8; // Number of segments around the tube
-                const float radius = cellSize * 0.5;  // Much thicker tube
+                const float radius = cellSize/4;  // Much thicker tube
                 
                 for (size_t i = 0; i < endIndex - 1; i++) {
                     const auto& current = solution[i];
