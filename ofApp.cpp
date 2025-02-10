@@ -228,6 +228,10 @@ void ofApp::draw() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         
+        // Disable GUI during 3D view to prevent depth issues
+        bool tempShowGui = showGui;
+        showGui = false;
+        
         // Set up camera for better 3D viewing
         cam.disableOrtho();  // Use perspective for better 3D view
         cam.begin();
@@ -347,10 +351,14 @@ void ofApp::draw() {
         // Draw the entire maze as a single mesh
         wallMesh.draw();
     } else {
+        // 2D view with better contrast
+        ofSetColor(240);  // Light gray background
+        ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+        
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
-                    drawCell(x, y, ofColor(0));  // Wall
+                    drawCell(x, y, ofColor(40));  // Darker walls for better contrast
                 }
             }
         }
@@ -513,10 +521,13 @@ void ofApp::draw() {
         cam.end();
         ofDisableLighting();
         ofDisableDepthTest();
+        // Restore GUI state
+        showGui = tempShowGui;
     }
     
-    // Draw GUI if enabled
+    // Draw GUI if enabled (now on top of everything)
     if (showGui) {
+        ofSetColor(255);  // Ensure GUI is drawn in white
         gui.draw();
     }
 }
