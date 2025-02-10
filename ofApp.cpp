@@ -240,8 +240,8 @@ void ofApp::draw() {
                               x * cellSize + cellSize/2,
                               y * cellSize + cellSize/2,
                               wallHeight/2,
-                              cellSize * 0.8,    // Slightly thinner walls
-                              cellSize * 0.8,    // Slightly thinner walls
+                              cellSize,    // Slightly thinner walls
+                              cellSize,    // Slightly thinner walls
                               wallHeight
                               );
                 }
@@ -279,7 +279,7 @@ void ofApp::draw() {
                 ofMesh tubeMesh;
                 tubeMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
                 const int segments = 8; // Number of segments around the tube
-                const float radius = cellSize/2;  // Much thicker tube
+                const float radius = cellSize * 0.5;  // Much thicker tube
                 
                 for (size_t i = 0; i < endIndex - 1; i++) {
                     const auto& current = solution[i];
