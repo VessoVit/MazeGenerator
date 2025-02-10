@@ -220,6 +220,8 @@ void ofApp::draw() {
     (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
     
+    bool tempShowGui = false;  // Declare at the start of draw()
+    
     if (view3D) {
         // Enable proper depth testing and lighting for Mac
         glEnable(GL_DEPTH_TEST);
@@ -228,8 +230,8 @@ void ofApp::draw() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         
-        // Disable GUI during 3D view to prevent depth issues
-        bool tempShowGui = showGui;
+        // Store GUI state
+        tempShowGui = showGui;
         showGui = false;
         
         // Set up camera for better 3D viewing
