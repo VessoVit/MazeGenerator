@@ -418,14 +418,24 @@ void ofApp::draw() {
                     tubeLight.setup();
                     tubeLight.enable();
                     tubeLight.setPointLight();
+                    // Position light slightly above the tube
                     tubeLight.setPosition(
                         (pos.first + 0.5) * cellSize,
                         (pos.second + 0.5) * cellSize,
-                        cellSize
+                        cellSize * 1.5  // Raised position
                     );
-                    tubeLight.setDiffuseColor(ofColor(255, 140, 0));  // Golden orange
-                    tubeLight.setSpecularColor(ofColor(255, 200, 0));
-                    tubeLight.setAttenuation(1.0, 0.2, 0.0);  // Adjusted for local effect
+                    // Point light downward at the tube
+                    tubeLight.lookAt(ofVec3f(
+                        (pos.first + 0.5) * cellSize,
+                        (pos.second + 0.5) * cellSize,
+                        cellSize
+                    ));
+                    tubeLight.setDiffuseColor(ofColor(255, 140, 0, 200));  // Semi-transparent golden orange
+                    tubeLight.setSpecularColor(ofColor(255, 200, 0, 200));
+                    tubeLight.setAttenuation(0.5, 0.001, 0.0);  // Reduced attenuation for wider light spread
+                    tubeLight.setSpotlight();  // Use spotlight for more focused illumination
+                    tubeLight.setSpotlightCutOff(60);  // Wide angle for better coverage
+                    tubeLight.setSpotConcentration(2);  // Soft edge falloff
                     tubeLights.push_back(tubeLight);
                 }
 
