@@ -352,14 +352,18 @@ void ofApp::draw() {
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
         if (view3D) {
-            // Begin glow shader
+            // Set up blending for glow effect
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            
+            // Begin glow shader with enhanced parameters
             glowShader.begin();
-            glowShader.setUniform3f("glowColor", 1.0, 0.55, 0.0); // Golden orange
-            glowShader.setUniform1f("glowIntensity", 1.5);
+            glowShader.setUniform3f("glowColor", 1.0, 0.65, 0.0); // Brighter golden orange
+            glowShader.setUniform1f("glowIntensity", 2.5); // Increased intensity
             glowShader.setUniform1f("time", shaderTime);
             
             // Update shader time
-            shaderTime += ofGetLastFrameTime();
+            shaderTime += ofGetLastFrameTime() * 0.5; // Slower pulsing
             
             // Enable additive blending for glow effect
             ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -421,8 +425,9 @@ void ofApp::draw() {
             }
             glowShader.end();
             
-            // Reset blend mode
-            ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+            // Reset OpenGL state
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDisable(GL_BLEND);
         } else {
             // Draw solution path background
             ofSetColor(255, 240, 240);  // Light red background
