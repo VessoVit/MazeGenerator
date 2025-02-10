@@ -303,8 +303,8 @@ void ofApp::draw() {
                         ofVec3f offset = right * (radius * cosA) + up * (radius * sinA);
                         
                         // Add vertices for both ends
-                        ofVec3f v1(x1, y1, cellSize/2);
-                        ofVec3f v2(x2, y2, cellSize/2);
+                        ofVec3f v1(x1, y1, cellSize);
+                        ofVec3f v2(x2, y2, cellSize);
                         v1 += offset;
                         v2 += offset;
                         
