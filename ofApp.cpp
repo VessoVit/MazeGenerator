@@ -349,13 +349,18 @@ void ofApp::draw() {
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
         if (view3D) {
-            // Create glowing material for the solution path
+            // Enhanced glowing material for the solution path
             ofMaterial material;
-            material.setEmissiveColor(ofColor(255, 140, 0, 255));  // Strong golden orange emission
-            material.setDiffuseColor(ofColor(255));  // No diffuse color to enhance glow effect
-            material.setSpecularColor(ofColor(255, 200, 0));  // Golden specular highlight
-            material.setShininess(128);  // High shininess for glow effect
+            material.setEmissiveColor(ofColor(255, 140, 0));  // Base emission
+            material.setDiffuseColor(ofColor(255, 69, 0));    // Orange-red diffuse
+            material.setSpecularColor(ofColor(255, 215, 0));  // Golden specular
+            material.setAmbientColor(ofColor(255, 140, 0, 100)); // Ambient glow
+            material.setShininess(64);  // Lower shininess for broader highlight
             material.begin();
+            
+            // Enable additive blending for glow effect
+            ofEnableBlendMode(OF_BLENDMODE_ADD);
+            ofSetLineWidth(2);
             
             // Draw solution path as a continuous tube
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
@@ -412,6 +417,9 @@ void ofApp::draw() {
                 tubeMesh.draw();
             }
             material.end();
+            
+            // Reset blend mode
+            ofEnableBlendMode(OF_BLENDMODE_ALPHA);
         } else {
             // Draw solution path background
             ofSetColor(255, 240, 240);  // Light red background
