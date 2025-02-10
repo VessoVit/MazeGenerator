@@ -242,22 +242,68 @@ void ofApp::draw() {
         ofSetColor(50);  // Darker floor for better contrast
         ofDrawRectangle(0, 0, (2 * mazeWidth + 1) * cellSize, (2 * mazeHeight + 1) * cellSize);
         
-        // Draw walls
+        // Draw walls as a single solid structure
         ofSetColor(100, 100, 120);  // Light gray-blue color for better contrast
+        ofMesh wallMesh;
+        wallMesh.setMode(OF_PRIMITIVE_TRIANGLES);
+        
+        // Helper lambda to add a wall face (two triangles)
+        auto addWallFace = [&](const ofVec3f& bl, const ofVec3f& br, 
+                              const ofVec3f& tr, const ofVec3f& tl) {
+            int idx = wallMesh.getNumVertices();
+            wallMesh.addVertex(bl);
+            wallMesh.addVertex(br);
+            wallMesh.addVertex(tr);
+            wallMesh.addVertex(tl);
+            
+            // First triangle
+            wallMesh.addIndex(idx);
+            wallMesh.addIndex(idx + 1);
+            wallMesh.addIndex(idx + 2);
+            
+            // Second triangle
+            wallMesh.addIndex(idx);
+            wallMesh.addIndex(idx + 2);
+            wallMesh.addIndex(idx + 3);
+            
+            // Add normals for better lighting
+            ofVec3f normal = ((br - bl).getCrossed(tr - bl)).normalized();
+            for (int i = 0; i < 4; i++) {
+                wallMesh.addNormal(normal);
+            }
+        };
+        
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
-                    ofDrawBox(
-                              x * cellSize + cellSize/2,
-                              y * cellSize + cellSize/2,
-                              wallHeight/2,
-                              cellSize*1.01,
-                              cellSize*1.01,
-                              wallHeight
-                              );
+                    float wx = x * cellSize;
+                    float wy = y * cellSize;
+                    float wz = 0;
+                    
+                    // Create vertices for each face of the wall cube
+                    ofVec3f frontBL(wx, wy, wz);
+                    ofVec3f frontBR(wx + cellSize, wy, wz);
+                    ofVec3f frontTR(wx + cellSize, wy, wz + wallHeight);
+                    ofVec3f frontTL(wx, wy, wz + wallHeight);
+                    
+                    ofVec3f backBL(wx, wy + cellSize, wz);
+                    ofVec3f backBR(wx + cellSize, wy + cellSize, wz);
+                    ofVec3f backTR(wx + cellSize, wy + cellSize, wz + wallHeight);
+                    ofVec3f backTL(wx, wy + cellSize, wz + wallHeight);
+                    
+                    // Add all faces
+                    addWallFace(frontBL, frontBR, frontTR, frontTL); // Front
+                    addWallFace(backBR, backBL, backTL, backTR);     // Back
+                    addWallFace(frontBR, backBR, backTR, frontTR);   // Right
+                    addWallFace(backBL, frontBL, frontTL, backTL);   // Left
+                    addWallFace(frontTL, frontTR, backTR, backTL);   // Top
+                    addWallFace(frontBL, backBL, backBR, frontBR);   // Bottom
                 }
             }
         }
+        
+        // Draw the entire maze as a single mesh
+        wallMesh.draw();
     } else {
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
