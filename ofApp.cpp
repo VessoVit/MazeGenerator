@@ -28,8 +28,9 @@ void ofApp::setup() {
     // Initialize 3D properties
     wallHeight = cellSize * 2;  // Reduced wall height
     cam.setDistance(500);
-    cam.setNearClip(0.01);     // Allow extremely close zoom
+    cam.setNearClip(0.001);    // Allow even closer zoom
     cam.setFarClip(10000);     // Maintain far viewing distance
+    cam.setTarget(ofVec3f(0, 0, 0)); // Set camera target to center
     
     // Setup lights for OF 0.12
     pointLight.setup();
@@ -207,18 +208,27 @@ void ofApp::draw() {
         ofEnableDepthTest();
         ofEnableLighting();
         
-        // Set up camera for macOS retina displays
-        cam.enableOrtho();
+        // Set up camera for better 3D viewing
+        cam.disableOrtho();  // Use perspective for better 3D view
         cam.begin();
+        
+        // Adjust lighting for better visibility
+        ofEnableSeparateSpecularLight();
+        pointLight.setDiffuseColor(ofColor(255, 255, 255));  // Brighter diffuse light
+        pointLight.setSpecularColor(ofColor(255, 255, 255)); // Full specular
+        pointLight.setPosition((2 * mazeWidth + 1) * cellSize / 2,  // Center light above maze
+                             (2 * mazeHeight + 1) * cellSize / 2,
+                             wallHeight * 3);
         
         
         // Scale for retina displays
         float scale = ofGetScreenWidth() / ofGetWidth();
         ofScale(scale, scale, scale);
         
-        // Update light positions for current frame
-        pointLight.setPosition(ofGetWidth()/2, ofGetHeight()/2, 500);
-        directionalLight.setPosition(ofGetWidth()/2 + 200, ofGetHeight()/2 + 200, 200);
+        // Update directional light for ambient illumination
+        directionalLight.setPosition(0, 0, wallHeight * 4);
+        directionalLight.setOrientation(ofVec3f(0, 0, -90));
+        directionalLight.setDiffuseColor(ofColor(150, 150, 150));  // Brighter ambient light
         
         // Center the maze
         ofTranslate(
