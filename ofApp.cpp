@@ -338,7 +338,7 @@ void ofApp::draw() {
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
-         The           drawCell(x, y, ofColor(0));  // Wall
+                    drawCell(x, y, ofColor(0));  // Wall
                 }
             }
         }
