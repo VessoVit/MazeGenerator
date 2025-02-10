@@ -30,7 +30,12 @@ void ofApp::setup() {
     cam.setDistance(500);
     cam.setNearClip(0.01);    // Allow even closer zoom
     cam.setFarClip(10000);     // Maintain far viewing distance
-    cam.setTarget(ofVec3f(0, 0, 0)); // Set camera target to center
+    // Set camera target to maze center
+    cam.setTarget(ofVec3f(
+        (2 * mazeWidth + 1) * cellSize / 2,
+        (2 * mazeHeight + 1) * cellSize / 2,
+        wallHeight / 2
+    ));
     
     // Setup lights for OF 0.12
     pointLight.setup();
@@ -214,11 +219,19 @@ void ofApp::draw() {
         
         // Adjust lighting for better visibility
         ofEnableSeparateSpecularLight();
-        pointLight.setDiffuseColor(ofColor(255, 255, 255));  // Brighter diffuse light
-        pointLight.setSpecularColor(ofColor(255, 255, 255)); // Full specular
-        pointLight.setPosition((2 * mazeWidth + 1) * cellSize / 2,  // Center light above maze
+        // Main point light above maze
+        pointLight.setDiffuseColor(ofColor(255, 255, 255));
+        pointLight.setSpecularColor(ofColor(255, 255, 255));
+        pointLight.setPosition((2 * mazeWidth + 1) * cellSize / 2,
                              (2 * mazeHeight + 1) * cellSize / 2,
-                             wallHeight * 3);
+                             wallHeight * 4);
+        
+        // Add ambient light for better shadows
+        directionalLight.setDiffuseColor(ofColor(100, 100, 100));
+        directionalLight.setPosition(-wallHeight * 2, -wallHeight * 2, wallHeight * 2);
+        directionalLight.lookAt(ofVec3f((2 * mazeWidth + 1) * cellSize / 2,
+                                      (2 * mazeHeight + 1) * cellSize / 2,
+                                      0));
         
         
         // Scale for retina displays
@@ -281,7 +294,7 @@ void ofApp::draw() {
                     float wz = 0;
                     
                     // Create vertices with a small offset to prevent z-fighting
-                    const float eps = 0.001f; // Small offset to prevent z-fighting
+                    const float eps = 0.01f; // Increased offset to prevent z-fighting
                     
                     // Only create faces that are visible (not adjacent to another wall)
                     bool hasWallNorth = (y > 0) && maze[y-1][x] == 1;
