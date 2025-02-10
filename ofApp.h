@@ -61,6 +61,8 @@ private:
     float wallHeight;
     ofLight pointLight;
     ofLight directionalLight;
+    ofShader glowShader;
+    float shaderTime;
     ofParameter<int> cellSizeGui;
     ofParameterGroup sizeControls;
     ofParameterGroup algorithmGroup;

@@ -5,6 +5,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+    // Load shaders
+    glowShader.load("shaders/glow");
+    shaderTime = 0;
     cellSize = 20;  // Initial cell size
     ofSetFrameRate(120);
     showSolution = false;
@@ -349,14 +352,14 @@ void ofApp::draw() {
     // Draw solution if enabled and exists
     if (showSolution && !solution.empty()) {
         if (view3D) {
-            // Enhanced glowing material for the solution path
-            ofMaterial material;
-            material.setEmissiveColor(ofColor(255, 140, 0));  // Base emission
-            material.setDiffuseColor(ofColor(255, 69, 0));    // Orange-red diffuse
-            material.setSpecularColor(ofColor(255, 215, 0));  // Golden specular
-            material.setAmbientColor(ofColor(255, 140, 0, 100)); // Ambient glow
-            material.setShininess(64);  // Lower shininess for broader highlight
-            material.begin();
+            // Begin glow shader
+            glowShader.begin();
+            glowShader.setUniform3f("glowColor", 1.0, 0.55, 0.0); // Golden orange
+            glowShader.setUniform1f("glowIntensity", 1.5);
+            glowShader.setUniform1f("time", shaderTime);
+            
+            // Update shader time
+            shaderTime += ofGetLastFrameTime();
             
             // Enable additive blending for glow effect
             ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -416,7 +419,7 @@ void ofApp::draw() {
                 
                 tubeMesh.draw();
             }
-            material.end();
+            glowShader.end();
             
             // Reset blend mode
             ofEnableBlendMode(OF_BLENDMODE_ALPHA);
