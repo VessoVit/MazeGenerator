@@ -271,29 +271,54 @@ void ofApp::draw() {
             material.setShininess(128);  // High shininess for glow effect
             material.begin();
             
-            // Draw solution path as 3D cylinders
+            // Draw solution path as a continuous tube
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
-            for (size_t i = 0; i < endIndex - 1 && i < solution.size() - 1; i++) {
-                const auto& current = solution[i];
-                const auto& next = solution[i + 1];
+            if (endIndex > 1) {
+                ofMesh tubeMesh;
+                tubeMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+                const int segments = 8; // Number of segments around the tube
+                const float radius = cellSize/6;
                 
-                float x1 = (current.first + 0.5) * cellSize;
-                float y1 = (current.second + 0.5) * cellSize;
-                float x2 = (next.first + 0.5) * cellSize;
-                float y2 = (next.second + 0.5) * cellSize;
+                for (size_t i = 0; i < endIndex - 1; i++) {
+                    const auto& current = solution[i];
+                    const auto& next = solution[i + 1];
+                    
+                    float x1 = (current.first + 0.5) * cellSize;
+                    float y1 = (current.second + 0.5) * cellSize;
+                    float x2 = (next.first + 0.5) * cellSize;
+                    float y2 = (next.second + 0.5) * cellSize;
+                    
+                    // Calculate direction vector
+                    ofVec3f dir(x2 - x1, y2 - y1, 0);
+                    ofVec3f up(0, 0, 1);
+                    ofVec3f right = dir.getCrossed(up).normalized();
+                    
+                    // Create circle points around the tube
+                    for (int s = 0; s <= segments; s++) {
+                        float angle = TWO_PI * s / segments;
+                        float cosA = cos(angle);
+                        float sinA = sin(angle);
+                        
+                        // Calculate points for both ends of this segment
+                        ofVec3f offset = right * (radius * cosA) + up * (radius * sinA);
+                        
+                        // Add vertices for both ends
+                        ofVec3f v1(x1, y1, cellSize/2);
+                        ofVec3f v2(x2, y2, cellSize/2);
+                        v1 += offset;
+                        v2 += offset;
+                        
+                        tubeMesh.addVertex(v1);
+                        tubeMesh.addVertex(v2);
+                        
+                        // Add color for both vertices
+                        ofFloatColor color(1.0, 0.55, 0.0);  // Golden orange
+                        tubeMesh.addColor(color);
+                        tubeMesh.addColor(color);
+                    }
+                }
                 
-                // Calculate cylinder properties
-                float dx = x2 - x1;
-                float dy = y2 - y1;
-                float length = sqrt(dx*dx + dy*dy);
-                float angle = atan2(dy, dx) * RAD_TO_DEG;
-                
-                // Draw cylinder
-                ofPushMatrix();
-                ofTranslate((x1 + x2)/2, (y1 + y2)/2, cellSize/2);  // Move to midpoint
-                ofRotateZDeg(angle);
-                ofDrawCylinder(0, 0, 0, cellSize/6, length);  // Center the cylinder
-                ofPopMatrix();
+                tubeMesh.draw();
             }
             material.end();
         } else {
