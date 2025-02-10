@@ -280,7 +280,13 @@ void ofApp::draw() {
                     float wy = y * cellSize;
                     float wz = 0;
                     
-                    // Create vertices for each face of the wall cube
+                    // Only create faces that are visible (not adjacent to another wall)
+                    bool hasWallNorth = (y > 0) && maze[y-1][x] == 1;
+                    bool hasWallSouth = (y < 2 * mazeHeight) && maze[y+1][x] == 1;
+                    bool hasWallEast = (x < 2 * mazeWidth) && maze[y][x+1] == 1;
+                    bool hasWallWest = (x > 0) && maze[y][x-1] == 1;
+
+                    // Create vertices for the wall cube
                     ofVec3f frontBL(wx, wy, wz);
                     ofVec3f frontBR(wx + cellSize, wy, wz);
                     ofVec3f frontTR(wx + cellSize, wy, wz + wallHeight);
@@ -291,13 +297,12 @@ void ofApp::draw() {
                     ofVec3f backTR(wx + cellSize, wy + cellSize, wz + wallHeight);
                     ofVec3f backTL(wx, wy + cellSize, wz + wallHeight);
                     
-                    // Add all faces
-                    addWallFace(frontBL, frontBR, frontTR, frontTL); // Front
-                    addWallFace(backBR, backBL, backTL, backTR);     // Back
-                    addWallFace(frontBR, backBR, backTR, frontTR);   // Right
-                    addWallFace(backBL, frontBL, frontTL, backTL);   // Left
-                    addWallFace(frontTL, frontTR, backTR, backTL);   // Top
-                    addWallFace(frontBL, backBL, backBR, frontBR);   // Bottom
+                    // Only add faces that are visible
+                    if (!hasWallNorth) addWallFace(frontBL, frontBR, frontTR, frontTL); // Front
+                    if (!hasWallSouth) addWallFace(backBR, backBL, backTL, backTR);     // Back
+                    if (!hasWallEast) addWallFace(frontBR, backBR, backTR, frontTR);   // Right
+                    if (!hasWallWest) addWallFace(backBL, frontBL, frontTL, backTL);   // Left
+                    addWallFace(frontTL, frontTR, backTR, backTL);   // Top always visible
                 }
             }
         }
