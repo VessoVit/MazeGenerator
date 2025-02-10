@@ -280,29 +280,38 @@ void ofApp::draw() {
                     float wy = y * cellSize;
                     float wz = 0;
                     
+                    // Create vertices with a small offset to prevent z-fighting
+                    const float eps = 0.001f; // Small offset to prevent z-fighting
+                    
                     // Only create faces that are visible (not adjacent to another wall)
                     bool hasWallNorth = (y > 0) && maze[y-1][x] == 1;
                     bool hasWallSouth = (y < 2 * mazeHeight) && maze[y+1][x] == 1;
                     bool hasWallEast = (x < 2 * mazeWidth) && maze[y][x+1] == 1;
                     bool hasWallWest = (x > 0) && maze[y][x-1] == 1;
 
-                    // Create vertices for the wall cube
-                    ofVec3f frontBL(wx, wy, wz);
-                    ofVec3f frontBR(wx + cellSize, wy, wz);
-                    ofVec3f frontTR(wx + cellSize, wy, wz + wallHeight);
-                    ofVec3f frontTL(wx, wy, wz + wallHeight);
+                    // Create vertices for the wall cube with slight offsets
+                    ofVec3f frontBL(wx + eps, wy + eps, wz);
+                    ofVec3f frontBR(wx + cellSize - eps, wy + eps, wz);
+                    ofVec3f frontTR(wx + cellSize - eps, wy + eps, wz + wallHeight);
+                    ofVec3f frontTL(wx + eps, wy + eps, wz + wallHeight);
                     
-                    ofVec3f backBL(wx, wy + cellSize, wz);
-                    ofVec3f backBR(wx + cellSize, wy + cellSize, wz);
-                    ofVec3f backTR(wx + cellSize, wy + cellSize, wz + wallHeight);
-                    ofVec3f backTL(wx, wy + cellSize, wz + wallHeight);
+                    ofVec3f backBL(wx + eps, wy + cellSize - eps, wz);
+                    ofVec3f backBR(wx + cellSize - eps, wy + cellSize - eps, wz);
+                    ofVec3f backTR(wx + cellSize - eps, wy + cellSize - eps, wz + wallHeight);
+                    ofVec3f backTL(wx + eps, wy + cellSize - eps, wz + wallHeight);
                     
-                    // Only add faces that are visible
+                    // Only add faces that are visible, with proper depth testing
                     if (!hasWallNorth) addWallFace(frontBL, frontBR, frontTR, frontTL); // Front
                     if (!hasWallSouth) addWallFace(backBR, backBL, backTL, backTR);     // Back
-                    if (!hasWallEast) addWallFace(frontBR, backBR, backTR, frontTR);   // Right
-                    if (!hasWallWest) addWallFace(backBL, frontBL, frontTL, backTL);   // Left
-                    addWallFace(frontTL, frontTR, backTR, backTL);   // Top always visible
+                    if (!hasWallEast) addWallFace(frontBR, backBR, backTR, frontTR);    // Right
+                    if (!hasWallWest) addWallFace(backBL, frontBL, frontTL, backTL);    // Left
+                    
+                    // Top face with slight inset to prevent z-fighting
+                    ofVec3f topFrontLeft = frontTL + ofVec3f(eps, eps, 0);
+                    ofVec3f topFrontRight = frontTR + ofVec3f(-eps, eps, 0);
+                    ofVec3f topBackRight = backTR + ofVec3f(-eps, -eps, 0);
+                    ofVec3f topBackLeft = backTL + ofVec3f(eps, -eps, 0);
+                    addWallFace(topFrontLeft, topFrontRight, topBackRight, topBackLeft); // Top always visible
                 }
             }
         }
