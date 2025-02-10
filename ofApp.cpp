@@ -26,9 +26,9 @@ void ofApp::setup() {
     sizeControls.add(cellSizeGui);
     
     // Initialize 3D properties
-    wallHeight = cellSize * 4;  // Double the wall height
+    wallHeight = cellSize * 2;  // Reduced wall height
     cam.setDistance(500);
-    cam.setNearClip(0.1);      // Allow very close zoom
+    cam.setNearClip(0.01);     // Allow extremely close zoom
     cam.setFarClip(10000);     // Maintain far viewing distance
     
     // Setup lights for OF 0.12
@@ -240,8 +240,8 @@ void ofApp::draw() {
                               x * cellSize + cellSize/2,
                               y * cellSize + cellSize/2,
                               wallHeight/2,
-                              cellSize,
-                              cellSize,
+                              cellSize * 0.8,    // Slightly thinner walls
+                              cellSize * 0.8,    // Slightly thinner walls
                               wallHeight
                               );
                 }
@@ -279,7 +279,7 @@ void ofApp::draw() {
                 ofMesh tubeMesh;
                 tubeMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
                 const int segments = 8; // Number of segments around the tube
-                const float radius = cellSize/4;  // Increased tube thickness
+                const float radius = cellSize/2;  // Much thicker tube
                 
                 for (size_t i = 0; i < endIndex - 1; i++) {
                     const auto& current = solution[i];
