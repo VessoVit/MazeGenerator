@@ -302,11 +302,16 @@ void ofApp::draw() {
                         // Calculate points for both ends of this segment
                         ofVec3f offset = right * (radius * cosA) + up * (radius * sinA);
                         
-                        // Add vertices for both ends
-                        ofVec3f v1(x1, y1, cellSize);
-                        ofVec3f v2(x2, y2, cellSize);
-                        v1 += offset;
-                        v2 += offset;
+                        // Add vertices for both ends with proper height
+                        ofVec3f v1(x1, y1, cellSize/2);
+                        ofVec3f v2(x2, y2, cellSize/2);
+                        
+                        // Calculate normal vector for proper 3D appearance
+                        ofVec3f normal = offset.normalized();
+                        
+                        // Add height offset based on normal
+                        v1 += normal * radius;
+                        v2 += normal * radius;
                         
                         tubeMesh.addVertex(v1);
                         tubeMesh.addVertex(v2);
