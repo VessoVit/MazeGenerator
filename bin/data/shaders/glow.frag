@@ -11,22 +11,27 @@ in vec4 vertexPosition;
 out vec4 outputColor;
 
 void main() {
-    // Calculate pulsing glow intensity
-    float pulseIntensity = glowIntensity * (1.0 + 0.3 * sin(time * 3.0));
+    // Calculate pulsing glow intensity with sharper falloff
+    float pulseIntensity = glowIntensity * (1.0 + 0.2 * sin(time * 3.0));
     
-    // Calculate rim lighting (stronger glow at edges)
+    // Calculate rim lighting with tighter edge glow
     vec3 viewDir = normalize(-vertexPosition.xyz);
     float rimFactor = 1.0 - max(dot(vertexNormal, viewDir), 0.0);
-    rimFactor = pow(rimFactor, 3.0); // Stronger rim effect
+    rimFactor = pow(rimFactor, 5.0); // Much sharper rim effect
     
-    // Enhanced glow effect
+    // Calculate distance-based attenuation
+    float distanceFromCenter = length(vertexPosition.xyz);
+    float attenuationFactor = exp(-distanceFromCenter * 0.1); // Exponential falloff
+    
+    // Enhanced glow effect with tight radius
     vec3 baseColor = vertexColor.rgb;
-    vec3 glowEffect = glowColor * pulseIntensity * (rimFactor + 0.5); // Add base glow
+    vec3 glowEffect = glowColor * pulseIntensity * rimFactor * attenuationFactor;
     
-    // Add bloom effect with higher intensity
-    float bloomFactor = 0.7;
-    vec3 bloomColor = mix(baseColor, glowEffect * 1.5, bloomFactor);
+    // Add localized bloom effect
+    float bloomFactor = 0.5;
+    vec3 bloomColor = mix(baseColor, glowEffect, bloomFactor * attenuationFactor);
     
-    // Final color with full opacity
-    outputColor = vec4(bloomColor + glowEffect, 1.0);
+    // Final color with opacity based on attenuation
+    float alpha = mix(0.0, 1.0, attenuationFactor * rimFactor);
+    outputColor = vec4(bloomColor + glowEffect, alpha);
 }
