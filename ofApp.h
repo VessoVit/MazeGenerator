@@ -61,6 +61,7 @@ private:
     float wallHeight;
     ofLight pointLight;
     ofLight directionalLight;
+    vector<ofLight> tubeLights;  // Array of lights for the solution path
     ofShader glowShader;
     float shaderTime;
     ofParameter<int> cellSizeGui;

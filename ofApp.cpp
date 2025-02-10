@@ -408,8 +408,27 @@ void ofApp::draw() {
                 
                 tubeMesh.draw();
             }
-            // Apply glow effect only to the solution path
+            // Apply glow effect and lights to the solution path
             if (showSolution) {
+                // Update tube lights
+                tubeLights.clear();
+                for (size_t i = 0; i < endIndex && i < solution.size(); i++) {
+                    const auto& pos = solution[i];
+                    ofLight tubeLight;
+                    tubeLight.setup();
+                    tubeLight.enable();
+                    tubeLight.setPointLight();
+                    tubeLight.setPosition(
+                        (pos.first + 0.5) * cellSize,
+                        (pos.second + 0.5) * cellSize,
+                        cellSize
+                    );
+                    tubeLight.setDiffuseColor(ofColor(255, 140, 0));  // Golden orange
+                    tubeLight.setSpecularColor(ofColor(255, 200, 0));
+                    tubeLight.setAttenuation(1.0, 0.2, 0.0);  // Adjusted for local effect
+                    tubeLights.push_back(tubeLight);
+                }
+
                 // Set up blending for glow effect
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -430,6 +449,12 @@ void ofApp::draw() {
                 // Reset OpenGL state
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 glDisable(GL_BLEND);
+                
+                // Disable tube lights
+                for (auto& light : tubeLights) {
+                    light.disable();
+                }
+                tubeLights.clear();
             } else {
                 // Draw without glow effect when solution is not visible
                 tubeMesh.draw();
