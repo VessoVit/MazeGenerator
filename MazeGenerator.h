@@ -20,4 +20,10 @@ private:
     int mazeWidth;
     int mazeHeight;
     bool isValid(int x, int y) const;
+    ~MazeGenerator() = default;
+    
+    // Validate maze dimensions
+    static bool validateDimensions(int width, int height) {
+        return width > 0 && height > 0 && width < 1000 && height < 1000;
+    }
 };

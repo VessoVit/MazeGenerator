@@ -11,4 +11,5 @@ public:
 private:
     vector<pair<int, int>> solution;
     bool isValid(int x, int y, int width, int height) const;
+    ~MazeSolver() = default;
 };

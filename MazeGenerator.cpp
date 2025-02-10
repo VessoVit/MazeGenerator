@@ -2,6 +2,9 @@
 
 MazeGenerator::MazeGenerator(int width, int height) 
     : mazeWidth(width), mazeHeight(height), animating(false) {
+    if (!validateDimensions(width, height)) {
+        throw std::invalid_argument("Invalid maze dimensions");
+    }
     directions = {{0, 2}, {2, 0}, {0, -2}, {-2, 0}};
 }
 

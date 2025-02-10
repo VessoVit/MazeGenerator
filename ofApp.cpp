@@ -622,9 +622,9 @@ void ofApp::windowResized(int w, int h) {
 }
 
 void ofApp::updateMazeDimensions() {
-    // Calculate new dimensions
-    int newWidth = max(5, (ofGetWidth() / cellSize - 1) / 2);
-    int newHeight = max(5, (ofGetHeight() / cellSize - 1) / 2);
+    // Calculate new dimensions with bounds checking
+    int newWidth = std::clamp((ofGetWidth() / cellSize - 1) / 2, 5, 100);
+    int newHeight = std::clamp((ofGetHeight() / cellSize - 1) / 2, 5, 100);
     
     // Only update if dimensions have changed
     if (newWidth != mazeWidth || newHeight != mazeHeight) {
