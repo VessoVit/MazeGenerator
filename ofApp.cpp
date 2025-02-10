@@ -221,16 +221,11 @@ void ofApp::draw() {
     (animatingSolution ? "Solving..." : "Ready");
     mazeInfo.set(info);
     
-    bool tempShowGui = false;  // Declare at the start of draw()
     
     if (view3D) {
         // Basic 3D setup
         ofEnableDepthTest();
         ofEnableLighting();
-        
-        // Store GUI state
-        tempShowGui = showGui;
-        showGui = false;
         
         // Set up camera for better 3D viewing
         cam.disableOrtho();  // Use perspective for better 3D view
@@ -522,8 +517,6 @@ void ofApp::draw() {
         cam.end();
         ofDisableLighting();
         ofDisableDepthTest();
-        // Restore GUI state
-        showGui = tempShowGui;
     }
     
     // Draw GUI if enabled (now on top of everything)
