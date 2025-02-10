@@ -18,8 +18,8 @@ void ofApp::setup() {
     showGui = true;
     
     // Set initial background and drawing colors
-    ofBackground(240);  // Light gray background
-    ofSetColor(0);      // Black for drawing
+    ofBackground(33);  // Dark background for both modes
+    ofSetColor(255);   // White for drawing
 //    ofSetCurrentRenderer(std::shared_ptr<ofBaseRenderer> renderer);
     
     
@@ -207,7 +207,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    ofBackground(240);  // Light gray background
+    ofBackground(33);  // Keep consistent dark background
     
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
@@ -346,15 +346,12 @@ void ofApp::draw() {
         // Draw the entire maze as a single mesh
         wallMesh.draw();
     } else {
-        // 2D view
-        ofSetColor(255);  // White background
-        ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-        
+        // 2D view with consistent dark theme
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
-                    ofSetColor(0);  // Black walls
-                    drawCell(x, y, ofColor(0));
+                    ofSetColor(100, 100, 120);  // Same color as 3D walls
+                    drawCell(x, y, ofColor(100, 100, 120));
                 }
             }
         }
