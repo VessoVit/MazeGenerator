@@ -356,8 +356,8 @@ void ofApp::draw() {
             
             // Draw solution path as a continuous tube
             int endIndex = animatingSolution ? currentSolutionIndex : solution.size();
+            ofMesh tubeMesh;  // Moved outside the if block
             if (endIndex > 1) {
-                ofMesh tubeMesh;
                 tubeMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
                 const int segments = 8; // Number of segments around the tube
                 const float radius = cellSize/4;  // Much thicker tube
