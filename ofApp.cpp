@@ -12,11 +12,14 @@ void ofApp::setup() {
     shaderTime = 0;
     
     // Setup GL state
-    ofEnableDepthTest();
-    ofEnableLighting();
     cellSize = 20;  // Initial cell size
-    ofSetFrameRate(120);
+    ofSetFrameRate(60);
     showSolution = false;
+    showGui = true;
+    
+    // Set initial background and drawing colors
+    ofBackground(240);  // Light gray background
+    ofSetColor(0);      // Black for drawing
 //    ofSetCurrentRenderer(std::shared_ptr<ofBaseRenderer> renderer);
     
     
@@ -204,7 +207,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    ofBackground(33);  // Black background
+    ofBackground(240);  // Light gray background
     
     // Update maze info
     string info = "Maze Size: " + ofToString(mazeWidth) + "x" + ofToString(mazeHeight) + "\n";
@@ -348,14 +351,15 @@ void ofApp::draw() {
         // Draw the entire maze as a single mesh
         wallMesh.draw();
     } else {
-        // 2D view with better contrast
-        ofSetColor(240);  // Light gray background
+        // 2D view
+        ofSetColor(255);  // White background
         ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
         
         for (int y = 0; y < 2 * mazeHeight + 1; y++) {
             for (int x = 0; x < 2 * mazeWidth + 1; x++) {
                 if (maze[y][x] == 1) {
-                    drawCell(x, y, ofColor(40));  // Darker walls for better contrast
+                    ofSetColor(0);  // Black walls
+                    drawCell(x, y, ofColor(0));
                 }
             }
         }
