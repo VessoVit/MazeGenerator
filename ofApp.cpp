@@ -12,10 +12,8 @@ void ofApp::setup() {
     shaderTime = 0;
     
     // Setup GL state
-    ofEnableAlphaBlending();
     ofEnableDepthTest();
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-    glEnable(GL_POINT_SPRITE);
+    ofEnableLighting();
     cellSize = 20;  // Initial cell size
     ofSetFrameRate(120);
     showSolution = false;
@@ -223,12 +221,9 @@ void ofApp::draw() {
     bool tempShowGui = false;  // Declare at the start of draw()
     
     if (view3D) {
-        // Enable proper depth testing and lighting for Mac
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        // Basic 3D setup
+        ofEnableDepthTest();
         ofEnableLighting();
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
         
         // Store GUI state
         tempShowGui = showGui;
