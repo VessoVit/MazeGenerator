@@ -423,10 +423,16 @@ void ofApp::draw() {
             }
             // Apply glow effect and lights to the solution path
             if (showSolution) {
-                // Update tube lights
+                // Update tube lights - limit to max 8 lights
                 tubeLights.clear();
-                for (size_t i = 0; i < endIndex && i < solution.size(); i++) {
-                    const auto& pos = solution[i];
+                size_t numLights = std::min(size_t(8), solution.size());
+                size_t step = solution.size() / numLights;
+                
+                for (size_t i = 0; i < numLights; i++) {
+                    size_t index = i * step;
+                    if (index >= endIndex) break;
+                    
+                    const auto& pos = solution[index];
                     ofLight tubeLight;
                     tubeLight.setup();
                     tubeLight.enable();
